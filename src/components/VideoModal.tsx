@@ -150,6 +150,11 @@ export const VideoModal: React.FC<VideoModalProps> = ({ project, onClose, onNavi
 
             <div className="flex flex-col items-start justify-between gap-4 border-t border-white/10 bg-white/[0.04] p-5 sm:flex-row sm:items-center">
               <div>
+                {project.award && (
+                  <div className="mb-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider text-amber-300 bg-black/80 border border-amber-500/50 shadow-[0_0_12px_rgba(245,158,11,0.3)]">
+                    <span>{project.award}</span>
+                  </div>
+                )}
                 <p className="text-sm leading-relaxed text-gray-100 sm:text-base">{project.description ?? `${project.title}, ${project.subtitle}`}</p>
                 {project.tags && project.tags.length > 0 && (
                   <ul className="mt-3 flex flex-wrap gap-2">
@@ -200,7 +205,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({ project, onClose, onNavi
                   onClick={() => onInquire(project)}
                   className="glass-red rounded-full px-5 py-3 text-xs font-bold uppercase tracking-wider text-white"
                 >
-                  {project.kind === 'software' ? 'Discuss Project' : 'Request Project'}
+                  Get In Touch
                 </a>
               </div>
             </div>

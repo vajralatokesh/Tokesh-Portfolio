@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { VenomButton } from './VenomButton';
 import { SITE, WHATSAPP_URL } from '../data/portfolioData';
-import { Mail, Phone } from 'lucide-react';
+import { Mail, Phone, Copy, Check } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +14,13 @@ export const Contact: React.FC = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const handleCopy = (text: string, field: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -36,7 +43,7 @@ export const Contact: React.FC = () => {
     e.preventDefault();
     setSubmitted(true);
     // Open user's mail client with the message pre-filled
-    const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(`Project Inquiry from ${formData.name}`)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`;
+    const mailto = `mailto:${SITE.email}?subject=${encodeURIComponent(`Message from ${formData.name}`)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`;
     window.location.href = mailto;
     setTimeout(() => {
       setSubmitted(false);
@@ -95,6 +102,28 @@ export const Contact: React.FC = () => {
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400">Call</span>
             <span className="text-base sm:text-lg md:text-xl font-extrabold text-gray-100">{SITE.phone}</span>
           </span>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleCopy(SITE.phone, 'phone');
+            }}
+            className="glass-chip ml-auto px-3.5 py-1.5 rounded-full text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all hover:scale-105 border border-white/10 hover:border-red-500/40"
+            title="Copy Phone to Clipboard"
+          >
+            {copiedField === 'phone' ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-400 font-mono text-[11px]">Copied!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-3.5 h-3.5 text-gray-400" />
+                <span className="font-mono text-[11px]">Copy</span>
+              </>
+            )}
+          </button>
         </a>
         <div className="red-halo" style={{ inset: '-14% -10%' }} aria-hidden="true" />
       <div
@@ -110,7 +139,7 @@ export const Contact: React.FC = () => {
               Message Dispatched!
             </h3>
             <p className="text-lg text-gray-300 font-medium max-w-md">
-              Thanks for reaching out! Your email app has been opened with the project details pre-filled.
+              Thanks for reaching out! Your email app has been opened with your message pre-filled.
             </p>
           </div>
         ) : (
@@ -122,15 +151,39 @@ export const Contact: React.FC = () => {
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-gray-400 block">Direct Inquiries</span>
-                  <a href={`mailto:${SITE.email}`} className="text-sm md:text-base font-bold text-white hover:text-red-400 transition-colors">
-                    {SITE.email}
-                  </a>
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-gray-400 block">Direct Email</span>
+                  <div className="flex items-center gap-2.5 mt-0.5">
+                    <a href={`mailto:${SITE.email}`} className="text-sm md:text-base font-bold text-white hover:text-red-400 transition-colors">
+                      {SITE.email}
+                    </a>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleCopy(SITE.email, 'email');
+                      }}
+                      className="glass-chip px-2.5 py-1 rounded-lg text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 transition-all hover:scale-105 border border-white/10 hover:border-red-500/40"
+                      title="Copy Email to Clipboard"
+                    >
+                      {copiedField === 'email' ? (
+                        <>
+                          <Check className="w-3 h-3 text-emerald-400" />
+                          <span className="text-emerald-400 font-mono text-[10px]">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3 h-3 text-gray-400" />
+                          <span className="font-mono text-[10px]">Copy</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-xs font-mono uppercase tracking-wider text-emerald-400">Open To New Projects</span>
+                <span className="text-xs font-mono uppercase tracking-wider text-emerald-400">Open To Opportunities</span>
               </div>
             </div>
 

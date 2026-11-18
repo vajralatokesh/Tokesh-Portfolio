@@ -278,6 +278,54 @@ export const About: React.FC = () => {
                 </div>
               </div>
 
+              {/* Experience & Education Timeline */}
+              <div className="pt-2">
+                <h3 className="text-xs md:text-base font-bold uppercase tracking-wider text-gray-500 mb-5 flex items-center gap-2">
+                  <span>Experience & Education</span>
+                  <span className="w-8 h-px bg-red-500/40" />
+                </h3>
+                <div className="relative pl-6 border-l-2 border-red-500/30 flex flex-col gap-6">
+                  {/* Item 1: Deloitte */}
+                  <div className="relative group">
+                    <span className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-red-600 border-2 border-[#07070a] shadow-[0_0_10px_rgba(220,38,38,0.8)] group-hover:scale-125 transition-transform" />
+                    <div className="flex flex-wrap items-baseline gap-2">
+                      <span className="text-white font-extrabold text-base md:text-lg">Deloitte</span>
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-md bg-red-500/20 text-red-300 border border-red-500/30">2026</span>
+                    </div>
+                    <div className="text-sm font-semibold text-gray-300 mt-0.5">Technology Intern · Strategy, Risk & Transactions (SR&T)</div>
+                    <p className="text-xs md:text-sm text-gray-400 mt-1.5 leading-relaxed">
+                      Collaborating with the Regulatory & Financial Risk team to architect scalable, technology-driven risk analytics pipelines. Secured internship through Top 10 performance at Deloitte Hacksplosion (out of 21,866 participants).
+                    </p>
+                  </div>
+
+                  {/* Item 2: MotionCut */}
+                  <div className="relative group">
+                    <span className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-red-600/70 border-2 border-[#07070a] shadow-[0_0_8px_rgba(220,38,38,0.6)] group-hover:scale-125 transition-transform" />
+                    <div className="flex flex-wrap items-baseline gap-2">
+                      <span className="text-white font-extrabold text-base md:text-lg">MotionCut</span>
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-md bg-white/10 text-gray-300 border border-white/10">Jan – Mar 2025</span>
+                    </div>
+                    <div className="text-sm font-semibold text-gray-300 mt-0.5">Python Programming Intern (MSME Registered)</div>
+                    <p className="text-xs md:text-sm text-gray-400 mt-1.5 leading-relaxed">
+                      Delivered project-based software implementations covering Python data structures, file handling, and algorithmic logic building.
+                    </p>
+                  </div>
+
+                  {/* Item 3: Jain University */}
+                  <div className="relative group">
+                    <span className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-red-600/50 border-2 border-[#07070a] shadow-[0_0_8px_rgba(220,38,38,0.4)] group-hover:scale-125 transition-transform" />
+                    <div className="flex flex-wrap items-baseline gap-2">
+                      <span className="text-white font-extrabold text-base md:text-lg">Jain Deemed-to-be University, Bengaluru</span>
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">8.99 CGPA · 2023 – 2027</span>
+                    </div>
+                    <div className="text-sm font-semibold text-gray-300 mt-0.5">B.Tech in Computer Science & Engineering (IoT)</div>
+                    <p className="text-xs md:text-sm text-gray-400 mt-1.5 leading-relaxed">
+                      Coursework: Data Structures, DBMS, Machine Learning, Web Development, IoT Systems, Software Engineering.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 

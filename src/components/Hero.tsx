@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { gsap } from 'gsap';
+import { FileDown } from 'lucide-react';
 import { VenomButton } from './VenomButton';
 import { HERO } from '../data/portfolioData';
 import {
@@ -629,6 +630,16 @@ export const Hero: React.FC = () => {
                   className="glass glass-hover inline-flex items-center justify-center px-5 py-3 sm:px-7 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider text-gray-200 hover:text-white hover:-translate-y-0.5 transition-all duration-300"
                 >
                   {HERO.secondaryButton}
+                </a>
+                <a
+                  href="/Vajrala_Tokesh_Resume.pdf"
+                  download="Vajrala_Tokesh_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass-chip inline-flex items-center justify-center gap-2 px-5 py-3 sm:px-6 sm:py-3.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider text-white hover:border-red-500/60 hover:-translate-y-0.5 transition-all duration-300 border border-white/10 shadow-[0_0_15px_rgba(220,38,38,0.25)]"
+                >
+                  <FileDown className="w-4 h-4 text-red-500" />
+                  <span>Resume CV</span>
                 </a>
               </div>
             </div>

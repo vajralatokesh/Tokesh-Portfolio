@@ -276,6 +276,9 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
   onSelectRef.current = onSelectProject;
 
   const [fallbackMode, setFallbackMode] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'ai' | 'web' | 'iot'>('all');
+  const selectedCategoryRef = useRef(selectedCategory);
+  selectedCategoryRef.current = selectedCategory;
 
   useScrollReveal(containerRef, '[data-project-heading] > *, [data-project-fallback]');
 
@@ -661,7 +664,8 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
         c.hover += ((idx === hoverIndex ? 1 : 0) - c.hover) * (1 - Math.exp(-10 * dt));
         c.mat.uniforms.uHover.value = c.hover;
         c.mesh.scale.multiplyScalar(1 + c.hover * 0.05);
-        c.mat.uniforms.uOpacity.value = prog.opacity;
+        const isMatched = selectedCategoryRef.current === 'all' || c.project.categoryGroup === selectedCategoryRef.current;
+        c.mat.uniforms.uOpacity.value = prog.opacity * (isMatched ? 1 : 0.18);
         c.mesh.visible = prog.opacity > 0.001;
 
         if (!c.videoTex && c.thumbs.length > 1) {
@@ -685,6 +689,15 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
             (tooltip.querySelector('[data-t]') as HTMLElement).textContent = hoveredProj.title;
             (tooltip.querySelector('[data-s]') as HTMLElement).textContent = hoveredProj.subtitle;
             (tooltip.querySelector('[data-c]') as HTMLElement).textContent = hoveredProj.category;
+            const awardEl = tooltip.querySelector('[data-a]') as HTMLElement;
+            if (awardEl) {
+              if (hoveredProj.award) {
+                awardEl.textContent = hoveredProj.award;
+                awardEl.style.display = 'inline-block';
+              } else {
+                awardEl.style.display = 'none';
+              }
+            }
           }
           tooltip.style.opacity = '1';
           const maxLeft = viewW - tooltip.offsetWidth - 8;
@@ -765,6 +778,29 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
         PROJECTS.
       </h2>
       <div className="w-20 h-1.5 bg-[#a31515] mt-3 rounded-full" />
+
+      {/* Filter Tabs */}
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-6 pointer-events-auto">
+        {[
+          { id: 'all', label: 'All Projects (6)' },
+          { id: 'ai', label: 'AI & Machine Learning' },
+          { id: 'web', label: 'Full-Stack Web' },
+          { id: 'iot', label: 'IoT & Embedded' },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setSelectedCategory(tab.id as any)}
+            className={`px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+              selectedCategory === tab.id
+                ? 'glass-red text-white shadow-[0_0_15px_rgba(220,38,38,0.4)] scale-105'
+                : 'glass-chip text-gray-400 hover:text-white border border-white/5 hover:border-white/20'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 
@@ -772,14 +808,24 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
     <section id="projects" ref={containerRef} className="relative w-full text-gray-100 py-28 px-4 md:px-10 border-t border-white/5">
       {headerContent}
       <div className="max-w-7xl mx-auto mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {PORTFOLIO_PROJECTS.map((proj) => (
+        {(selectedCategory === 'all'
+          ? PORTFOLIO_PROJECTS
+          : PORTFOLIO_PROJECTS.filter((p) => p.categoryGroup === selectedCategory)
+        ).map((proj) => (
           <button
             key={proj.id}
             data-project-fallback
             onClick={() => onSelectProject(proj)}
-            className="glass glass-panel-card h-auto p-0 block whitespace-normal rounded-2xl overflow-hidden text-left group hover:scale-[1.02] transition-transform duration-300"
+            className="glass glass-panel-card h-auto p-0 block whitespace-normal rounded-2xl overflow-hidden text-left group hover:scale-[1.02] transition-transform duration-300 relative"
           >
-            <ProjectVideoFallback project={proj} />
+            <div className="relative">
+              <ProjectVideoFallback project={proj} />
+              {proj.award && (
+                <div className="absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider text-amber-300 bg-black/85 backdrop-blur-md border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.35)]">
+                  {proj.award}
+                </div>
+              )}
+            </div>
             <div className="p-5">
               <span className="text-xs uppercase tracking-[0.2em] text-red-400 font-bold">
                 {proj.category}
@@ -794,17 +840,18 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
   ) : (
     <section id="projects" ref={containerRef} className="relative w-full text-gray-100 border-t border-white/5" style={{ height: '420vh' }}>
       <div className="sticky top-0 h-screen w-full overflow-hidden">
-        <div className="absolute inset-x-0 top-24 md:top-24 z-20 px-4 pointer-events-none">
+        <div className="absolute inset-x-0 top-16 md:top-20 z-20 px-4 pointer-events-none">
           {headerContent}
         </div>
         <div ref={canvasWrapRef} className="absolute inset-0 z-10" data-no-ripple aria-label="Featured projects" role="region" />
         <div
           ref={tooltipRef}
-          className="pointer-events-none absolute left-0 top-0 z-30 glass rounded-xl px-4 py-3 transition-opacity duration-200 max-w-[16rem]"
+          className="pointer-events-none absolute left-0 top-0 z-30 glass rounded-xl px-4 py-3 transition-opacity duration-200 max-w-[17rem]"
           style={{ opacity: 0 }}
         >
           <span data-c className="block text-[10px] uppercase tracking-[0.2em] text-red-400 font-bold" />
-          <span data-t className="block text-base font-black text-white leading-tight mt-0.5" />
+          <span data-a className="mt-1 inline-block text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-black/85 text-amber-300 border border-amber-500/50 shadow-[0_0_10px_rgba(245,158,11,0.3)]" style={{ display: 'none' }} />
+          <span data-t className="block text-base font-black text-white leading-tight mt-1" />
           <span data-s className="block text-xs text-gray-400 mt-0.5" />
         </div>
       </div>

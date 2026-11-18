@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FileDown } from 'lucide-react';
 import { SITE } from '../data/portfolioData';
 
 export const Navbar: React.FC = () => {
@@ -32,7 +33,7 @@ export const Navbar: React.FC = () => {
         </a>
 
         <div className="hidden md:flex items-center gap-8">
-          {['Projects', 'About', 'Services', 'Skills', 'Contact'].map((item) => (
+          {['Projects', 'About', 'Skills', 'Contact'].map((item) => (
             <a
               key={item}
               href={`#${item.toLowerCase()}`}
@@ -44,11 +45,21 @@ export const Navbar: React.FC = () => {
           ))}
         </div>
 
-        {/* Action Button */}
-        <div className="hidden sm:block">
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <a
+            href="/Vajrala_Tokesh_Resume.pdf"
+            download="Vajrala_Tokesh_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glass-chip inline-flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-gray-200 hover:text-white text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 border border-white/10 hover:border-red-500/50 shadow-[0_0_12px_rgba(220,38,38,0.2)]"
+          >
+            <FileDown className="w-3.5 h-3.5 text-red-500" />
+            <span>Resume</span>
+          </a>
           <a
             href="#contact"
-            className="glass-red inline-block px-5 py-2 rounded-full text-white text-xs font-bold uppercase tracking-wider"
+            className="glass-red hidden sm:inline-block px-5 py-2 rounded-full text-white text-xs font-bold uppercase tracking-wider"
           >
             Let's Talk
           </a>

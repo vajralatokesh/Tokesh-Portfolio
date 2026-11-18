@@ -47,9 +47,10 @@ export const Stats: React.FC = () => {
         if (!numEl || !figEl || !barEl || !labelEl) return;
 
         const target = Number(item.dataset.value);
+        const isDecimal = String(item.dataset.value).includes('.');
         const counter = { v: 0 };
         const at = 0.3 + i * 0.18; // staggered left to right
-        numEl.textContent = '0';
+        numEl.textContent = isDecimal ? '0.00' : '0';
 
         tl.fromTo(figEl, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, at)
           .fromTo(
@@ -60,7 +61,7 @@ export const Stats: React.FC = () => {
               duration: 2.2,
               ease: 'power3.out',
               onUpdate: () => {
-                numEl.textContent = String(Math.round(counter.v));
+                numEl.textContent = isDecimal ? counter.v.toFixed(2) : String(Math.round(counter.v));
               },
             },
             at
@@ -159,7 +160,7 @@ export const Stats: React.FC = () => {
       className="relative w-full text-gray-100 py-20 md:py-28 px-4 md:px-10 lg:px-16 overflow-hidden border-t border-white/5"
     >
       <h2 id="stats-heading" className="sr-only">
-        Client results
+        Key Achievements
       </h2>
 
       {/* One glass panel, three columns split by hairlines */}
