@@ -187,8 +187,8 @@ function ProjectVideoFallback({ project }: { project: Project }) {
   }, [project.videoUrl]);
 
   return (
-    <div ref={ref} className="project-video-fallback" data-video-ready={ready}>
-      <img src={project.poster} alt="" loading="lazy" />
+    <div ref={ref} className="project-video-fallback w-full" style={{ aspectRatio: '16/9', position: 'relative', overflow: 'hidden' }} data-video-ready={ready}>
+      <img src={project.poster} alt="" loading="lazy" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
       {project.videoUrl && (
         <video
           ref={videoRef}
@@ -200,6 +200,7 @@ function ProjectVideoFallback({ project }: { project: Project }) {
           preload="metadata"
           onPlaying={() => setReady(true)}
           aria-label={project.title}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
         />
       )}
     </div>
@@ -275,7 +276,7 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
   const onSelectRef = useRef(onSelectProject);
   onSelectRef.current = onSelectProject;
 
-  const [fallbackMode, setFallbackMode] = useState(false);
+  const [fallbackMode, setFallbackMode] = useState(() => window.innerWidth < 600);
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'ai' | 'web' | 'iot'>('all');
   const selectedCategoryRef = useRef(selectedCategory);
   selectedCategoryRef.current = selectedCategory;
@@ -283,7 +284,7 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
   useScrollReveal(containerRef, '[data-project-heading] > *, [data-project-fallback]');
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth < 600) {
       setFallbackMode(true);
       return;
     }
@@ -780,18 +781,18 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
       <div className="w-20 h-1.5 bg-[#a31515] mt-3 rounded-full" />
 
       {/* Filter Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-6 pointer-events-auto">
+      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3 mt-5 pointer-events-auto px-2">
         {[
-          { id: 'all', label: 'All Projects (6)' },
-          { id: 'ai', label: 'AI & Machine Learning' },
-          { id: 'web', label: 'Full-Stack Web' },
-          { id: 'iot', label: 'IoT & Embedded' },
+          { id: 'all', label: 'All (6)' },
+          { id: 'ai', label: 'AI & ML' },
+          { id: 'web', label: 'Web' },
+          { id: 'iot', label: 'IoT' },
         ].map((tab) => (
           <button
             key={tab.id}
             type="button"
             onClick={() => setSelectedCategory(tab.id as any)}
-            className={`px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+            className={`px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${
               selectedCategory === tab.id
                 ? 'glass-red text-white shadow-[0_0_15px_rgba(220,38,38,0.4)] scale-105'
                 : 'glass-chip text-gray-400 hover:text-white border border-white/5 hover:border-white/20'
@@ -805,9 +806,9 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
   );
 
   return fallbackMode ? (
-    <section id="projects" ref={containerRef} className="relative w-full text-gray-100 py-28 px-4 md:px-10 border-t border-white/5">
+    <section id="projects" ref={containerRef} className="relative w-full text-gray-100 py-20 px-4 md:px-10 border-t border-white/5">
       {headerContent}
-      <div className="max-w-7xl mx-auto mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="max-w-7xl mx-auto mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {(selectedCategory === 'all'
           ? PORTFOLIO_PROJECTS
           : PORTFOLIO_PROJECTS.filter((p) => p.categoryGroup === selectedCategory)
@@ -816,29 +817,30 @@ export const Projects: React.FC<ProjectsProps> = ({ onSelectProject }) => {
             key={proj.id}
             data-project-fallback
             onClick={() => onSelectProject(proj)}
-            className="glass glass-panel-card h-auto p-0 block whitespace-normal rounded-2xl overflow-hidden text-left group hover:scale-[1.02] transition-transform duration-300 relative"
+            className="glass glass-panel-card h-auto p-0 block whitespace-normal rounded-2xl overflow-hidden text-left group active:scale-[0.98] hover:scale-[1.02] transition-transform duration-300 relative w-full"
           >
-            <div className="relative">
+            <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
               <ProjectVideoFallback project={proj} />
               {proj.award && (
-                <div className="absolute top-3 left-3 z-10 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider text-amber-300 bg-black/85 backdrop-blur-md border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.35)]">
+                <div className="absolute top-2 left-2 z-10 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-amber-300 bg-black/85 backdrop-blur-md border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.35)] max-w-[90%] leading-tight">
                   {proj.award}
                 </div>
               )}
             </div>
-            <div className="p-5">
-              <span className="text-xs uppercase tracking-[0.2em] text-red-400 font-bold">
+            <div className="p-4 sm:p-5">
+              <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-red-400 font-bold">
                 {proj.category}
               </span>
-              <h3 className="text-xl font-black text-white mt-1">{proj.title}</h3>
-              <p className="text-gray-400 text-sm mt-1">{proj.subtitle}</p>
+              <h3 className="text-lg sm:text-xl font-black text-white mt-1 leading-snug">{proj.title}</h3>
+              <p className="text-gray-400 text-sm mt-1 line-clamp-2">{proj.subtitle}</p>
+              <span className="inline-block mt-3 text-[10px] text-gray-500 uppercase tracking-widest">Tap to view →</span>
             </div>
           </button>
         ))}
       </div>
     </section>
   ) : (
-    <section id="projects" ref={containerRef} className="relative w-full text-gray-100 border-t border-white/5" style={{ height: '420vh' }}>
+    <section id="projects" ref={containerRef} className="relative w-full text-gray-100 border-t border-white/5" style={{ height: window.innerWidth < 900 ? '320vh' : '420vh' }}>
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <div className="absolute inset-x-0 top-16 md:top-20 z-20 px-4 pointer-events-none">
           {headerContent}
